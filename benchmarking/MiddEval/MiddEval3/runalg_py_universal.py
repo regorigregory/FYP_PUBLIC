@@ -155,16 +155,16 @@ if __name__ == "__main__":
             r = righties[i]
             is_test_set = True if "test" in r else False
             if(not is_test_set):
-                gt = os.path.abspath(gts[i])
-                nonocc = os.path.abspath(nonoccs[i])
+                gt = gts[i]
+                nonocc = nonoccs[i]
             else:
                 gt=None
                 nonocc=None
 
-            ui["outpath"] = os.path.abspath(os.path.dirname(l))
+            ui["outpath"] = os.path.dirname(l)
             progress_bar.progress_bar(counter-1, len(lefties), header="Generating disparities in progress.")
-            left = os.path.abspath(l)
-            right = os.path.abspath(r)
+            left = l
+            right = r
 
             tic = time.time()
             run_eval(ui["path_to_alg_runfile"], ui["method_name"], left, right, gt,

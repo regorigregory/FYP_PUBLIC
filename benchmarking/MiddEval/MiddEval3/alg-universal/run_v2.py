@@ -160,12 +160,12 @@ if __name__ == "__main__":
 
     #for a in sys.argv:
     #    print(a)
-
+    benchmarking_root = ".."
     EXPERIMENT_TITLE = sys.argv[1]
-    im1_path = sys.argv[2]
-    im2_path = sys.argv[3]
+    im1_path = os.path.join(benchmarking_root, sys.argv[2])
+    im2_path = os.path.join(benchmarking_root, sys.argv[3])
 
-    output_dir_path = sys.argv[4]
+    output_dir_path = os.path.join(benchmarking_root, sys.argv[4])
     kernel_width = int(sys.argv[5])
     kernel_height = int(sys.argv[6])
     MATCH = int(sys.argv[7])
@@ -279,7 +279,9 @@ if __name__ == "__main__":
 
         EXP_PARAMS["preprocessing_method"] = "None"
         EXP_PARAMS["scene"] = im1_path.split("\\")[-2]
-        EXP_PARAMS["image_filename"] = pfm_output_path
+        EXP_PARAMS["image_filename"] = os.path.join(
+        "benchmarking", "MiddEval", "MiddEval3",
+            pfm_output_path.replace("..\\", "").replace("../", ""))
 
         EXP_PARAMS["img_res"] = "{0}x{1}".format(img1.shape[1], img1.shape[0])
         EXP_PARAMS["kernel_size"] = "{0}x{1}".format(kernel_height, kernel_width)

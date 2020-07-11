@@ -149,13 +149,13 @@ if __name__ == "__main__":
 
                 for i,l in enumerate(lefties):
                     r = righties[i]
-                    gt = os.path.abspath(gts[i])
-                    nonocc = os.path.abspath(nonoccs[i])
+                    gt = gts[i]
+                    nonocc = nonoccs[i]
 
-                    ui["outpath"] = os.path.abspath(os.path.dirname(l))
+                    ui["outpath"] = os.path.dirname(l)
                     progress_bar.progress_bar(counter-1, len(lefties)*len(patches)*len(options.values())*6, header="Generating disparities in progress.")
-                    left = os.path.abspath(l)
-                    right = os.path.abspath(r)
+                    left = l
+                    right = r
 
                     tic = time.time()
                     run_eval(ui["path_to_alg_runfile"], ui["method_name"], left, right, gt,

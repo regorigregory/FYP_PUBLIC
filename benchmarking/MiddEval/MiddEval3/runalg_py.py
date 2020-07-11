@@ -63,10 +63,10 @@ if __name__ == "__main__":
         alg_runfile = glob.glob(selected_alg+"/run*")[0]
         counter =1
         for l,r in zip(lefties, righties):
-            outpath = os.path.abspath(os.path.dirname(l))
+            outpath = os.path.dirname(l)
             tic = time.time()
             progress_bar.progress_bar(counter-1, len(lefties), header="Generating disparities in progress.")
-            run_eval(selected_alg, os.path.abspath(l), os.path.abspath(r), alg_runfile, outpath)
+            run_eval(selected_alg, l, r, alg_runfile, outpath)
             toc=time.time()
             runtime = toc-tic
             print("{0}th runtime: {1}".format(counter, runtime))

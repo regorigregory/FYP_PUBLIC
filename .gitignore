@@ -4,11 +4,8 @@
 *.pfp
 rob_devkit
 ./rob_devkit
-!**/datasets/**/*.png
-**/disparities
 **/pickled_slice_predictions
 **/vgg16
-./datasets
 *.zip
 *.driveupload
 # JPEG
@@ -43,7 +40,6 @@ rob_devkit
 
 # Portable Network Graphics
 *.png
-!/benchmarking/MiddEval/MiddEval3/**/*.png
 
 # Animated Portable Network Graphics
 *.apng
@@ -75,4 +71,9 @@ rob_devkit
 # 3D Images
 *.3dm
 *.max
+
+!/benchmarking/MiddEval/MiddEval3/**/*.png
+!/**/datasets/**/*.png
+!/experiments/disparities/**/*.*
+
 

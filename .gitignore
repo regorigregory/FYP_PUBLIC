@@ -4,7 +4,7 @@
 *.pfp
 rob_devkit
 ./rob_devkit
-**/datasets
+!**/datasets/**/*.png
 **/disparities
 **/pickled_slice_predictions
 **/vgg16

@@ -4,16 +4,19 @@ import numpy as np
 import os
 import plotly.graph_objs as go
 import plotly.express as px
+
 from ipywidgets import HBox, VBox, Button
+
+import project_helpers as ph
 
 # loading df, disparities and ground truth as well...
 
 def load_n_clean(path_to_dataframe, gts=True, kernel_sizes=True):
     df = pd.read_csv(os.path.abspath(path_to_dataframe))
     df = df.drop_duplicates()
-    df["loaded_imgs"] = [read_image_binary(path) for path in df["image_filename"]]
+    df["loaded_imgs"] = [read_image_binary(ph.fix_win_rel_paths(path)) for path in df["image_filename"]]
     if(gts):
-        df["loaded_gts"] = [read_image_binary(os.path.join(os.path.dirname(path), "disp0GT.png")) for path in df["image_filename"]]
+        df["loaded_gts"] = [read_image_binary(os.path.join(ph.fix_win_rel_paths(os.path.dirname(path)), "disp0GT.png")) for path in df["image_filename"]]
     if(kernel_sizes):
         h_n_w = np.array(df["kernel_size"].str.split("x").to_list())
         df["h"] = pd.to_numeric(h_n_w[:, 0])

@@ -247,10 +247,10 @@ if __name__ == "__main__":
     import sys
     import os
     from components.utils import middlebury_utils as mbu
+    import project_helpers
+    sys.path.append(os.path.join("..", ".."))
 
-    sys.path.append("../../")
-
-    ROOT_PATH = os.path.join("..", "..")
+    ROOT_PATH = project_helpers.get_project_dir()
     EXPERIMENT_TITLE = "EXP_000-Baseline"
 
     DATASET_FOLDER = os.path.join(ROOT_PATH, "datasets", "middlebury")

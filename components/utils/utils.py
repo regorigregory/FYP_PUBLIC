@@ -9,7 +9,6 @@ def get_last_saved_image_id(path):
     paths_stringified = sorted([p.name for p in paths])
     if(len(paths_stringified))==0:
         return 1
-
     temp = paths_stringified[-1].split(".")[0][-4:]
     return int(temp)+1
 
@@ -37,48 +36,6 @@ def executeParallelMatching(initializedMatcher):
         initializedMatcher.recompileObject(result)
         initializedMatcher.generateDisparity()
         return initializedMatcher
-
-def get_output_filename(specs):
-    separator = "&"
-    kv_separator = "="
-    fname =  "{img_name}_"\
-              "is_img_p{kv}{is_img_preprocessed}{sep}" \
-              "alg_t{kv}{alg_type}{sep}" \
-              "is_p{kv}{is_parallel}{sep}" \
-              "m{kv}{match}{sep}" \
-              "g{kv}{gap}{sep}" \
-              "eg{kv}{egap}{sep}" \
-              "mim{kv}{matrix_init_mode}{sep}" \
-              "cfil{kv}{convolution_filters}{sep}" \
-              "fs{kv}{filter_strategy}{sep}" \
-              "mm{kv}{matching_mode}{sep}"\
-              "rt{kv}{runtime}{sep}" \
-              "b1{kv}{bad1:.2f}{sep}b1.5{kv}{bad15:.2f}{sep}b2{kv}{bad2:.2f}{sep}b10{kv}{bad10:.2f}{sep}avg_e{kv}{avg_err:.2f}"\
-        .format(
-        is_parallel=specs["is_parallel"],
-        img_name=specs["img_name"],
-        alg_type=specs["alg_type"],
-        is_img_preprocessed=specs["is_img_preprocessed"],
-        convolution_filters=specs["convolution_filters"],
-        filter_strategy=specs["filter_strategy"],
-        matching_mode=specs["matching_mode"],
-        match=specs["match"],
-        gap=specs["gap"],
-        egap=specs["egap"],
-        matrix_init_mode=specs["matrix_init_mode"],
-        runtime=specs["runtime"],
-        bad1=specs["bad1"],
-        bad15=specs["bad15"],
-        bad2=specs["bad2"],
-        bad10=specs["bad10"],
-        avg_err=specs["avg_err"],
-        sep=separator,
-        kv = kv_separator
-    )
-    fname = re.sub("\.", "_", fname)+"."
-    fname += specs["ext"]
-
-    return fname
 
 def saveTwoImages(img1, img2, test_folder ="./test_outputs", image_extension=".png", pre="test_disparity"):
     fname = getNextFileName(test_folder , image_extension, pre)

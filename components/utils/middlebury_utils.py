@@ -2,12 +2,14 @@ import os
 import numpy as np
 import cv2
 import glob
+import project_helpers
+
 def add_masks_to_raw_disparity(disp, occl):
     mask = (occl==0)
     mod_disp = disp.copy()
     mod_disp[mask] = 0
     return mod_disp
-def get_image_paths(rootpath=os.path.join("..", "..", "datasets", "middlebury"), year=2003, scene="teddy", size=""):
+def get_image_paths(rootpath=os.path.join(project_helpers.get_project_dir(), "datasets", "middlebury"), year=2003, scene="teddy", size=""):
     size = size if size != "Q" else ""
     directory = os.path.join(rootpath, "middlebury_"+str(year), scene+size)
     imgs = list(["im2", "im6", "disp2", "nonocc"])
@@ -23,7 +25,7 @@ def get_image_paths(rootpath=os.path.join("..", "..", "datasets", "middlebury"),
                 found=True
                 break
         if not found:
-            raise Exception("The dataset folder is damaged. The file '{0}' is missing".format(temp_path))
+            raise Exception("The dataset folder is corrupt. The file '{0}' is missing".format(temp_path))
 
         """
             temp_path = os.path.join(directory, img+"*")
@@ -74,7 +76,7 @@ if __name__ == "__main__":
     import os
     import cv2
     import matplotlib.pyplot as plt
-    ROOT = os.path.join("..", "..")
+    ROOT = project_helpers.get_project_dir()
 
     SELECTED_DATASET = "middlebury_2003"
     SELECTED_SCENE = "teddy"

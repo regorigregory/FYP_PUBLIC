@@ -80,5 +80,8 @@ def plod3d_with_img_surface(disp, finess=5, surface=None, rotation=False, surfac
 
 
 if __name__ == "__main__":
-    test_img = cv2.imread("../../datasets/middlebury/middlebury_2003/teddy/im2.png", cv2.IMREAD_GRAYSCALE)
+    from pathlib import Path
+    import os
+    import project_helpers as ph
+    test_img = cv2.imread(os.path.join(ph.get_project_dir(), Path("/datasets/middlebury/middlebury_2003/teddy/im2.png")), cv2.IMREAD_GRAYSCALE)
     # show_incorrect_pixels(test_img, test_img)

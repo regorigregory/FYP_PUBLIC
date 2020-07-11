@@ -1,9 +1,10 @@
 import logging
 import os
 import sys
+import project_helpers
 class Wrapper():
 
-    def __init__(self, file_path = "./logs/numba_simple_scores.csv"):
+    def __init__(self, file_path = os.path.join(project_helpers.get_project_dir(), "experiments","logs","numba_simple_scores.csv")):
         self.logging = logging
         self.header = False
         self._file_path = file_path

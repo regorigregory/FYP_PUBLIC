@@ -17,11 +17,11 @@ def get_datasets_dir()->Path:
 
 def fix_win_rel_paths(path:str)->str:
     root = get_project_dir()
-    cleaned_path = path.replace('\\', "/")
+    cleaned_path = path.replace('\\', "/").replace("\t", "/t")
     if ".." in path:
         relative_index = cleaned_path.rfind("..")+2
         cleaned_path = cleaned_path[relative_index:]
-    return os.path.join(root, cleaned_path)
+    return Path(os.path.join(root, cleaned_path))
 
 if __name__ == "__main__":
     print(get_project_dir().is_dir())

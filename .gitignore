@@ -75,5 +75,7 @@ rob_devkit
 !/benchmarking/MiddEval/MiddEval3/**/*.png
 !/**/datasets/**/*.png
 !/experiments/disparities/**/*.*
+!/tests/**/*.*
+
 
 

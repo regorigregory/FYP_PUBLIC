@@ -111,3 +111,37 @@ def apply_demo_filters(loaded_imgs):
     im6s = [im6, im6_blurred, im6_h, im6_v, im6_t, im6_features_added]
 
     return im2s, im6s
+
+def load_pfm(file, remove_inf = True):
+  file = open(file, 'rb')
+  color = None
+  width = None
+  height = None
+  scale = None
+  endian = None
+
+  header = file.readline().decode('utf-8').rstrip()
+  if header == 'PF':
+    color = True
+  elif header == 'Pf':
+    color = False
+  else:
+    raise Exception('Not a PFM file.')
+  dim_line = file.readline().decode('utf-8').strip()
+  dims_found = dim_line.split(" ")
+  width, height = map(int, dims_found)
+  scale_line = file.readline().decode('utf-8').rstrip()
+  scale = float(scale_line)
+  if scale < 0: # little-endian
+    endian = '<'
+    scale = -scale
+  else:
+    endian = '>' # big-endian
+
+  data = np.fromfile(file, endian + 'f').astype(np.float64)
+  shape = (height, width, 3) if color else (height, width)
+  img =  np.flip(np.reshape(data, shape), axis=0)
+  if(remove_inf):
+      img = np.where(img==np.inf, 0, img)
+  return img, scale
+

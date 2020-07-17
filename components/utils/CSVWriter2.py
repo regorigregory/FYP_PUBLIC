@@ -29,7 +29,8 @@ class Wrapper():
                 f.write(message_header)
                 f.close()
        else:
-           sys.stdout.write("File {0} already exists, header has not been written.\n".format(self._file_path))
+           pass
+           #sys.stdout.write("File {0} already exists, header has not been written.\n".format(self._file_path))
 
 
 

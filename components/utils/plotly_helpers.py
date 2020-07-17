@@ -8,28 +8,25 @@ import plotly.express as px
 from ipywidgets import HBox, VBox, Button
 
 import project_helpers as ph
-
+from components.utils import middlebury_utils as mbu
 # loading df, disparities and ground truth as well...
 
-def load_n_clean(path_to_dataframe, gts=True, kernel_sizes=True):
+def load_n_clean(path_to_dataframe, gts=True,  v_2003=False, kernel_sizes=True):
     df = pd.read_csv(os.path.abspath(path_to_dataframe))
     df = df.drop_duplicates()
-    df["loaded_imgs"] = [read_image_binary(ph.fix_win_rel_paths(path)) for path in df["image_filename"]]
-    if(gts):
-        df["loaded_gts"] = [read_image_binary(os.path.join(ph.fix_win_rel_paths(os.path.dirname(path)), "disp0GT.png")) for path in df["image_filename"]]
+    df["loaded_imgs"] = [mbu.read_image_binary(ph.fix_win_rel_paths(path)) for path in df["image_filename"]]
+    if(gts and not v_2003):
+        df["loaded_gts"] = [mbu.read_image_binary(os.path.join((os.path.dirname(ph.fix_win_rel_paths(path))), "disp0GT.png")) for path in df["image_filename"]]
+    elif(gts and v_2003):
+        gts = mbu.get_groundtruths_files_2003(size="Q", mask="groundtruth", binary_mode=True)
+        df["loaded_gts"] = [gts[scene] for scene in df["scene"]]
+
     if(kernel_sizes):
         h_n_w = np.array(df["kernel_size"].str.split("x").to_list())
         df["h"] = pd.to_numeric(h_n_w[:, 0])
         df["w"] = pd.to_numeric(h_n_w[:, 1])
-        selected_scene_df = df.sort_values(by=["h", "w"])
+        df.sort_values(by=["h", "w"], inplace=True)
     return df
-
-# helper function as image widget needs this format...
-
-def read_image_binary(path):
-    with open(path, "rb") as f:
-        b = f.read()
-        return b
 
 # getting a wrapped scatter plot. Optional trace dimension in colours
 
@@ -74,8 +71,10 @@ def get_hover_function2(img_widget, dfs):
     return hover_fn
 
 # for displaying gt as well in a third widget...
-
 def get_hover_function3(img_widget_disparity,img_widget_groundtruth,  dfs):
+    return get_hover_function_with_gt(img_widget_disparity,img_widget_groundtruth,  dfs)
+
+def get_hover_function_with_gt(img_widget_disparity,img_widget_groundtruth,  dfs):
     def hover_fn(trace, points, state):
         # print(points)
         if (len(points.point_inds) > 0):
@@ -97,8 +96,10 @@ def bind_hover_function(figs, img_widget, selected_scene_df):
 
 
 # for displaying gt as well in a third widget...
-
 def bind_hover_function2(figs, img_widget, selected_scene_df, img_widget_groundtruth=False):
+    return bind_hover_function_with_gt_widget(figs, img_widget, selected_scene_df, img_widget_groundtruth=img_widget_groundtruth)
+
+def bind_hover_function_with_gt_widget(figs, img_widget, selected_scene_df, img_widget_groundtruth=False):
     for fig in figs:
         for trace in fig.data:
             if(img_widget_groundtruth):
@@ -122,17 +123,16 @@ def get_figure_traced(df, x_label, y_label, trace_dim, discrete_hover = False):
         dfs.append(temp_df)
 
         if(not discrete_hover):
-            label = ["Experiment id: {4}<br>Scene: {0}<br>kernel size: {1}<br>match:{2}<br>bad4: {3}<br>" \
-                     "IMG res:{5}".format(a, b, c, d, e, f)
-                     for a, b, c, d, e,f in zip(temp_df["scene"], temp_df["kernel_size"], temp_df["match"], temp_df["bad4"],
-                                           temp_df["experiment_id"], temp_df["img_res"])
+            label = [str(y_label)+"{6}<br>Experiment id:<br> {4}<br>Scene: {0}<br>kernel size: {1}<br>match:{2}<br>bad4: {3}<br>"\
+                     "IMG res:{5}".format(a, b, c, d, e, f, g)
+                     for a, b, c, d, e,f, g in
+                     zip(temp_df["scene"], temp_df["kernel_size"], temp_df["match"], temp_df["bad4"],
+                                           temp_df["experiment_id"], temp_df["img_res"], temp_df[y_label])
                      ]
         else:
-            label = ["Scene:{0}<br>match:{1}<br>bad4: {2}<br>" \
-                         .format(a, b, c)
+            label = [str(y_label)+":{2}<br>Scene:{0}<br>match:{1}<br>".format(a, b, c)
                      for a, b, c in
-                     zip(temp_df["scene"], temp_df["match"], temp_df["bad4"]
-                         )
+                     zip(temp_df["scene"], temp_df["match"], temp_df[y_label])
                      ]
         fig.add_trace(go.Scatter(x=temp_df[x_label], y=temp_df[y_label], name=str(k), hovertemplate=
         '%{text}', text=label, showlegend=True))
@@ -158,7 +158,7 @@ def get_brush_function(master_n_slaves, selected_scene_df):
 
             for i, fig in enumerate(master_n_slaves):
                 with fig.batch_update():
-                    fig.data[0].marker.opacity = opacity/(i+1)
+                    fig.data[0].marker.opacity = opacity
                     fig.data[0].marker.color = color
 
 
@@ -167,8 +167,7 @@ def get_brush_function(master_n_slaves, selected_scene_df):
 
 def bind_brush_function(master_n_slaves, selected_scene_df):
     func = get_brush_function(master_n_slaves, selected_scene_df)
-    for trace in master_n_slaves[0].data:
-        trace.on_selection(func)
+    master_n_slaves[0].data[0].on_selection(func)
 
 
 def get_reset_brush_function(master_n_slaves):

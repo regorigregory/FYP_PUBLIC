@@ -65,6 +65,28 @@ def get_images_v2(rootpath, dataset, year, size="Q", grayscale=True):
         LOADED_IMG_DICT[scene][img_type] =temp_img
     return LOADED_IMG_DICT,IMAGE_PATH_DICT
 
+def read_image_binary(path):
+    with open(path, "rb") as f:
+        b = f.read()
+        return b
+
+def get_gt_paths_2003(size="Q", mask="groundtruth"):
+    ds_root = project_helpers.get_datasets_dir()
+    ds_subdir = os.path.join("middlebury", "middlebury_2003")
+    if size != "Q" and size != "H":
+        raise Exception("Unsupported size '{0}' has been passed as a parameter.".format(size))
+    ext = ".pgm" if size == "H" and mask != "nonocc" else ".png"
+    found_files = glob.glob(os.path.join(ds_root, ds_subdir, size, "*"+mask + ext))
+    return found_files
+
+
+
+def get_groundtruths_files_2003(size="Q", mask="groundtruth", binary_mode=False):
+    found_files = get_gt_paths_2003(size=size, mask=mask)
+    read_function = (lambda path: read_image_binary(path)) if binary_mode else (lambda path: cv2.imread(path, cv2.IMREAD_GRAYSCALE))
+    loaded_images = {os.path.split(path)[1].split("_")[0]: read_function(path) for path in found_files}
+    return loaded_images
+
 def convert_pfm_to_png_for_viz(path_to_pfm):
 
     temp = cv2.imread(path_to_pfm, cv2.IMREAD_UNCHANGED)

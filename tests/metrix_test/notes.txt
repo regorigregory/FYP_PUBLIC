@@ -1,0 +1,38 @@
+Non-occluded regions (white) and occluded and border regions (black).
+Errors are only evaluated in the white regions.
+
+Regions near depth discontinuities1 (white), occluded and border regions (black), and other regions (gray).
+Errors are only evaluated in the white regions.
+
+(1) The definition of these regions is different from the old version (we now consider neighborhoods of depth discontinuities AND half-occluded regions), resulting in slighly different error statistics.
+
+Error bars in the stereo evaluation table
+(new feature, added June 22 2008)
+
+Motivation and explanation:
+---------------------------
+
+The error bars give a visual indication of how well the methods
+perform.  They show the average percentage of bad pixels over all
+twelve columns (or, if one of the sorting buttons is clicked, of
+the selected (green) columns).  Note that this is *not* the metric
+by which the table is sorted, which is the average *rank* over all
+(selected) columns.
+
+The main reason that we visualize a different metric than the sorting
+metric is that generally too much importance is given to the exact
+rank of a method in the table.  For example, it is fairly arbitrary
+which method is currently ranked #1 among the top 3 or 4 methods,
+especially since we cannot control the amount of parameter tuning that
+different authors do.  While the average rank provides a reasonable
+way of ordering the methods, the average error visualized by the error
+bars shows just how close the top-performing methods are to each
+other, and thus (hopefully) deemphasizes the exact position in the
+table.
+
+The length of each error bar is proportional to the error, from 0 to
+the maximal error in the table.
+
+
+Many thanks to Heiko Hirschmueller for suggesting this feature and to
+David Fouhey for implementing it.

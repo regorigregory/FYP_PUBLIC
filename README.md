@@ -14,9 +14,9 @@ Requirements are listed in the "requirements.txt" file. If run via binder the li
 <li>ALG_002_EXP_001-Baseline-MacLean_et_al &ndash; Implementing max-disparity constraints into the pipeline</li>
 <li>ALG_003_EXP_001-Baseline-MacLean_et_al-Parallel_version &ndash; Parallelizing the matching</li>
 <li>ALG_004_EXP_001-Baseline-MacLean_et_al-Numba &ndash; Numba implementation of the pipeline</li>
-<li>ALG_004_EXP_002-Baseline-MacLean_et_al-param_search &ndash; Parameter search &ndash; na&iuml;ve-os.path ALG_004_EXP_002-VIS</li>
+<li>ALG_004_EXP_002-Baseline-MacLean_et_al-param_search &ndash; Parameter search &ndash; na&iuml;ve</li>
 <li>ALG_005_EXP_001-PatchMatch-MacLean_et_al-Numba &ndash; Incrementing the pipeline by implementing constant weight support windows (CW)</li>
-<li>ALG_005_EXP_002-PatchMatch-MacLean_et_al-Numba_well_known_filters &ndash; Edge detectors, gaussian weights and a variety of different shapes are tested for support windows &ndash; results images</li>
+<li>ALG_005_EXP_002-PatchMatch-MacLean_et_al-Numba_well_known_filters &ndash; Edge detectors, gaussian weights and a variety of different shapes are tested for support windows &ndash;</li>
 <li>ALG_005_EXP_003-PatchMatch-MacLean_et_al-Middlebury_2014-VIS &ndash; Benchmarking the pipeline with a variety of CW windows on the Middlebury 2014 dataset</li>
 <li>In progress</li>
 <li>In progress</li>

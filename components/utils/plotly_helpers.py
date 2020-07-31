@@ -17,8 +17,10 @@ def load_n_clean(path_to_dataframe, gts=True,  v_2003=False, kernel_sizes=True):
     df["loaded_imgs"] = [mbu.read_image_binary(ph.fix_win_rel_paths(path)) for path in df["image_filename"]]
     if(gts and not v_2003):
         df["loaded_gts"] = [mbu.read_image_binary(os.path.join((os.path.dirname(ph.fix_win_rel_paths(path))), "disp0GT.png")) for path in df["image_filename"]]
+
     elif(gts and v_2003):
-        gts = mbu.get_groundtruths_files_2003(size="Q", mask="groundtruth", binary_mode=True)
+        gts = mbu.get_groundtruths_files_2003(size="Q", mask="gt_nonocc", binary_mode=True)
+
         df["loaded_gts"] = [gts[scene] for scene in df["scene"]]
 
     if(kernel_sizes):
@@ -123,11 +125,11 @@ def get_figure_traced(df, x_label, y_label, trace_dim, discrete_hover = False):
         dfs.append(temp_df)
 
         if(not discrete_hover):
-            label = [str(y_label)+"{6}<br>Experiment id:<br> {4}<br>Scene: {0}<br>kernel size: {1}<br>match:{2}<br>bad4: {3}<br>"\
-                     "IMG res:{5}".format(a, b, c, d, e, f, g)
-                     for a, b, c, d, e,f, g in
+            label = [str(y_label)+": {6}<br>Experiment id:<br> {4}<br>Scene: {0}<br>kernel size: {1}<br>kernel spec: {7}<br>match:{2}<br>bad4: {3}<br>"\
+                     "IMG res:{5}".format(a, b, c, d, e, f, g,h)
+                     for a, b, c, d, e,f, g,h in
                      zip(temp_df["scene"], temp_df["kernel_size"], temp_df["match"], temp_df["bad4"],
-                                           temp_df["experiment_id"], temp_df["img_res"], temp_df[y_label])
+                                           temp_df["experiment_id"], temp_df["img_res"], temp_df[y_label], temp_df["kernel_spec"])
                      ]
         else:
             label = [str(y_label)+":{2}<br>Scene:{0}<br>match:{1}<br>".format(a, b, c)

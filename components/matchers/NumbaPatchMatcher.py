@@ -1,8 +1,9 @@
 from components.utils.SimpleTimer import SimpleTimer
 from components.interfaces.NumbaWrapper import Interface
-from components.utils import NumbaPatchMatcherFunctionsv2 as patch_functions
+from components.numba_functions import NPM_CW_Functions as patch_functions
 
 import numpy as np
+
 class Wrapper(Interface):
     def set_filter(self, filter):
         self._filter = filter
@@ -13,7 +14,7 @@ class Wrapper(Interface):
             initialize_matrix_template=patch_functions.initialize_matrix_template_maclean,
             dmax=passed_dmax
         )
-        
+
     def configure_instance_for_optimisation(self):
         self.configure_instance()
         #super().configure_instance(match_scanlines = patch_functions.match_scanlines_param_search, match_images = patch_functions.match_images_param_search)
@@ -42,15 +43,17 @@ if __name__ == "__main__":
     import cv2
     import numpy as np
     import os
-    im1_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", "cones", "im2.png")
-    im2_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", "cones", "im6.png")
+    import project_helpers
+
+    im1_path = os.path.join(project_helpers.get_project_dir(), "datasets", "middlebury", "middlebury_2003", "cones", "im2.png")
+    im2_path = os.path.join(project_helpers.get_project_dir(), "datasets", "middlebury", "middlebury_2003", "cones", "im6.png")
     left = cv2.imread(im1_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
     right = cv2.imread(im2_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
     #im1 = np.random.randint(0, 255, [2,4])
     #im2 = np.random.randint(0, 255, [2, 4])
     from components.utils.SintelReader import Wrapper as SintelReader
 
-    path = os.path.join("..", "..", "datasets", "sintel", "training")
+    path = os.path.join(project_helpers.get_project_dir(), "datasets", "sintel", "training")
     reader = SintelReader(rootPath=path)
     reader.print_available_scenes()
     reader.set_selected_scene('cave_2')
@@ -74,5 +77,5 @@ if __name__ == "__main__":
 
     SimpleTimer.timeit()
     import matplotlib.pyplot as plt
-    from matplotlib import cm
+
     plt.imshow(z, cmap = "gray")

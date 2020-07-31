@@ -9,6 +9,7 @@ def add_masks_to_raw_disparity(disp, occl):
     mod_disp = disp.copy()
     mod_disp[mask] = 0
     return mod_disp
+
 def get_image_paths(rootpath=os.path.join(project_helpers.get_project_dir(), "datasets", "middlebury"), year=2003, scene="teddy", size=""):
     size = size if size != "Q" else ""
     directory = os.path.join(rootpath, "middlebury_"+str(year), scene+size)

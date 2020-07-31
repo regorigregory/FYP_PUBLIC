@@ -41,6 +41,7 @@ class Wrapper:
 
     @staticmethod
     def avg_err(disp, gt, occ, occlusions_counted_in_errors = False):
+        # avg abs error
         disp, gt = Wrapper.add_occlusions(disp, gt, occ, occlusions_counted_in_errors)
         n = disp.size if occlusions_counted_in_errors else (disp.size-np.sum(occ==0))
         absolute_error = np.sum(np.abs(disp-gt))

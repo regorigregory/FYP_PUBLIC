@@ -112,6 +112,7 @@ def apply_demo_filters(loaded_imgs):
 
     return im2s, im6s
 
+# adapted from https://gist.github.com/chpatrick/8935738
 def load_pfm(file, remove_inf = True):
   file = open(file, 'rb')
   color = None

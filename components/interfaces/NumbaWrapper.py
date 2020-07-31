@@ -1,11 +1,10 @@
 import abc
-import sys
-from components.utils import NumbaSimpleMatcherFunctions as default_functions
+from components.numba_functions import NSM_Functions as default_functions
 
 from components.utils.SimpleTimer import SimpleTimer
-import numpy as np
-class Interface(abc.ABC):
 
+
+class Interface(abc.ABC):
 
     def __init__(self, match, gap, egap, verbose=False):
         self._match = match
@@ -39,10 +38,13 @@ class Interface(abc.ABC):
     def configure_init_function(self, matrix_init_function):
         self._initialize_matrix_template = matrix_init_function
 
-    def configure_instance(self, match_images = default_functions.match_images,
+    def configure_instance(self,
+                           match_images = default_functions.match_images,
                            match_scanlines = default_functions.match_scanlines,
                            initialize_matrix_template=default_functions.initialize_matrix_template,
-                           fill_up_first_rows_func = default_functions.fill_up_first_rows_default, dmax=256):
+                           fill_up_first_rows_func = default_functions.fill_up_first_rows_default,
+                           dmax=256):
+
         self._dmax = dmax
         self._match_images =match_images
         self._scanline_match_function = match_scanlines

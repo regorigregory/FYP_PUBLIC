@@ -4,14 +4,14 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-
+import project_helpers
 
 class Difficulity(Enum):
     MODERATE = "clean"
     NIGHTMARE = "final"
 
 class Wrapper:
-    def __init__(self, rootPath = os.path.join("datasets", "sintel", "training"), difficulity = Difficulity.MODERATE,\
+    def __init__(self, rootPath = os.path.join(project_helpers.get_project_dir(), "datasets", "sintel", "training"), difficulity = Difficulity.MODERATE,\
                  occ_path = "occlusions" , disp_path = "disparities", outtta_path = "outofframe"):
         self.rootPath = rootPath
         self.DIRECTION  = ["_left", "_right"]

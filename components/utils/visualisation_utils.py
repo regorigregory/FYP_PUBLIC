@@ -29,7 +29,7 @@ def show_hit_and_miss(disp,gt, titles=["hit", "miss"], threshold=1):
     ax = plt.subplot(122)
     ax.set_title(titles[1])
     plt.imshow(ic, cmap="gray")
-    pass
+
 def show_difference(disp, gt,  cmm = "Accent"):
     diff = _get_difference(gt, disp)
     x = np.arange(0, disp.shape[0])[:, np.newaxis]

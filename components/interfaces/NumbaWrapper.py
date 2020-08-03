@@ -1,6 +1,7 @@
 import abc
 from components.numba_functions import NSM_Functions as default_functions
-
+from components.numba_functions import common_functions as cf
+import numpy as np
 from components.utils.SimpleTimer import SimpleTimer
 
 
@@ -17,13 +18,13 @@ class Interface(abc.ABC):
             SimpleTimer.print_with_timestamp("Numba Matcher isntance has been initialised with: {0}, {1}, {2} (m,g,egap)".format(self._match, self._gap, self._egap))
 
         self.matrix_init_modes = []
-        self.matrix_init_modes.append(default_functions.fill_up_first_rows_default)
-        self.matrix_init_modes.append(default_functions.fill_up_first_rows_v2)
-        self.matrix_init_modes.append(default_functions.fill_up_first_rows_v3)
+        self.matrix_init_modes.append(cf.fill_up_first_rows_default)
+        self.matrix_init_modes.append(cf.fill_up_first_rows_v2)
+        self.matrix_init_modes.append(cf.fill_up_first_rows_v3)
 
         self.matrix_template_intit = []
-        self.matrix_template_intit.append(default_functions.initialize_matrix_template)
-        self.matrix_template_intit.append(default_functions.initialize_matrix_template_maclean)
+        self.matrix_template_intit.append(cf.initialize_matrix_template)
+        self.matrix_template_intit.append(cf.initialize_matrix_template_maclean)
 
         self.match_functions = []
         self.match_functions.append(default_functions.match_scanlines)
@@ -41,8 +42,8 @@ class Interface(abc.ABC):
     def configure_instance(self,
                            match_images = default_functions.match_images,
                            match_scanlines = default_functions.match_scanlines,
-                           initialize_matrix_template=default_functions.initialize_matrix_template,
-                           fill_up_first_rows_func = default_functions.fill_up_first_rows_default,
+                           initialize_matrix_template=cf.initialize_matrix_template,
+                           fill_up_first_rows_func = cf.fill_up_first_rows_default,
                            dmax=256):
 
         self._dmax = dmax

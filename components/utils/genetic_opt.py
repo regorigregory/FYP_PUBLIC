@@ -1,3 +1,13 @@
+import numpy as np
+from geneticalgorithm import geneticalgorithm as ga
+import numpy as np
+import matplotlib.pyplot as plt
+from components.numba_functions import temp2 as TAD_G
+import pickle
+import cv2
+import os
+from components.utils.Metrix import Wrapper as m
+
 def get_me_random_slices(left, right, gt, nonocc, amount_of_slices = 10, start_y=0, end_y=200):
 
     sliced = np.zeros([4, amount_of_slices*3, int(end_y-start_y)])
@@ -21,27 +31,19 @@ def get_me_random_slices_ordered(left, right, gt, nonocc, row_height = 30, start
     return all[:, random_rowstart:int(random_rowstart+row_height), start_y:end_y]
 
 if __name__ == "__main__":
-    import numpy as np
-    from geneticalgorithm import geneticalgorithm as ga
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from components.numba_functions import temp as TAD_G
-    import pickle
-    import cv2
-    import os
-    from components.utils.Metrix import Wrapper as m
 
-    scaler = 256
+
+    scaler = 1
     scene = "teddy"
     im1_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "im2.png")
     im2_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "im6.png")
     gt_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "disp2.png")
     occ_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "nonocc.png")
 
-    im1 = cv2.imread(im1_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)[30:-15, :]/ scaler
-    im2 = cv2.imread(im2_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)[30:-15, :]/ scaler
-    gt = cv2.imread(gt_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)[30:-15, :]
-    occ = cv2.imread(occ_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)[30:-15, :]
+    im1 = cv2.imread(im1_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    im2 = cv2.imread(im2_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    gt = cv2.imread(gt_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    occ = cv2.imread(occ_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
 
     sliced_images = [im1, im2, gt, occ]
 
@@ -50,22 +52,22 @@ if __name__ == "__main__":
     BEST_BAD = 10000000
     best_x=None
     COUNTER = 1
-    pop_size=75
-    max_num_iteration=30
+    pop_size=150
+    max_num_iteration=5
     #sliced_images = get_me_random_slices(im1, im2, gt, occ)
     #sliced_images = get_me_random_slices_ordered(im1, im2, gt, occ)
 
     algorithm_params = {
         'max_num_iteration': max_num_iteration, \
         'population_size': pop_size, \
-        'mutation_probability': 0.17, \
+        'mutation_probability': 0.2, \
         'elit_ratio': 0.2, \
         'crossover_probability': 0.5, \
         'parents_portion': 0.4, \
         'crossover_type': 'uniform', \
         'max_iteration_without_improv': 4}
 
-    varbound = np.array([[5, 40], [-20, -1], [-20, -1], [0.05, 20], [0.1, 20], [0.3, 0.9], [0.01, 0.5], [0.001, 0.1]])
+    varbound = np.array([[5, 40], [-20, -1], [-20, -1], [0.05, 20], [0.1, 100], [0.3, 10], [0.01, 20]])
 
 
     def f(x):
@@ -75,9 +77,9 @@ if __name__ == "__main__":
         global sliced_images
         global pop_size
         x = x.astype(np.float64)
-        match = x[0]/ scaler
-        gap = x[1] / scaler
-        egap = x[2] / scaler
+        match = x[0]
+        gap = x[1]
+        egap = x[2]
 
         x, z = TAD_G.test_pipeline(match, gap, egap,
                                    sliced_images[0],
@@ -86,24 +88,23 @@ if __name__ == "__main__":
                                    gamma_c=x[3],
                                    gamma_s=x[4],
                                    alpha=x[5],
-                                   T_c = x[6],
-                                   T_s = x[7])
-
+                                   T_c = x[6])
         #EUC = m.eucledian_distance(z * 4, sliced_images[2], sliced_images[3])
         BAD1 = m.bad(z * 4, sliced_images[2], sliced_images[3], threshold=1)
         if BAD1<BEST_BAD:
             BEST_BAD = BAD1
             best_x = x
         COUNTER+=1
-        if(COUNTER%pop_size==0):
+        if(COUNTER%(pop_size/2)==0):
             print("\nBest BAD1 so far: {0:.6f}".format(BEST_BAD))
+            print(best_x)
             #sliced_images = get_me_random_slices_ordered(im1, im2, gt, occ)
         return BAD1
 
 
 
     model=ga(function=f,
-             dimension=8,
+             dimension=7,
              variable_type='real',
              variable_boundaries=varbound,
              algorithm_parameters = algorithm_params,

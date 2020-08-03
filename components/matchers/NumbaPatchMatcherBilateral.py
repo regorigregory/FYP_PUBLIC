@@ -1,27 +1,28 @@
-from components.utils.SimpleTimer import SimpleTimer
 from components.interfaces.NumbaWrapper import Interface
 from components.numba_functions import NPM_BAW_Functions as patch_functions
-
+from components.numba_functions import common_functions as cf
+from components.utils.SimpleTimer import SimpleTimer
 import numpy as np
+
 
 class Wrapper(Interface):
     def set_filter(self, filter):
         self._filter = filter
 
-    def configure_instance(self, passed_dmax=64, gamma_c=10, gamma_s =90, alpha=0.1):
+    def configure_instance(self, passed_dmax=64, gamma_c=10, gamma_s=90, alpha=0.0, product_flag=True):
         super().configure_instance(
             match_images=patch_functions.match_images,
             match_scanlines=patch_functions.match_scanlines_maclean,
-            initialize_matrix_template=patch_functions.initialize_matrix_template_maclean,
+            initialize_matrix_template=cf.initialize_matrix_template_maclean,
             dmax=passed_dmax
         )
         self.gamma_c = gamma_c
         self.gamma_s = gamma_s
         self.alpha = alpha
+        self.product_flag = product_flag
 
     def configure_instance_for_optimisation(self):
         self.configure_instance()
-        # super().configure_instance(match_scanlines = patch_functions.match_scanlines_param_search, match_images = patch_functions.match_images_param_search)
 
     def run_pipeline(self):
         self.test_pipeline()
@@ -46,47 +47,46 @@ class Wrapper(Interface):
                                   disparity,
                                   self._scanline_match_function,
                                   filter=self._filter,
-                                  gamma_c = self.gamma_c,
-                                  gamma_s = self.gamma_s,
-                                  alpha = self.alpha)
+                                  gamma_c=self.gamma_c,
+                                  gamma_s=self.gamma_s,
+                                  alpha=self.alpha,
+                                  product_flag = self.product_flag)
         return x, z
 
 
 if __name__ == "__main__":
     import cv2
-    import numpy as np
     import os
-    import project_helpers
-    im1_path = os.path.join(project_helpers.get_project_dir(), "datasets", "middlebury", "middlebury_2003", "cones", "im2.png")
-    im2_path = os.path.join(project_helpers.get_project_dir(), "datasets", "middlebury", "middlebury_2003", "cones", "im6.png")
-    left = cv2.imread(im1_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
-    right = cv2.imread(im2_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    from components.utils.Metrix import Wrapper as m
 
-    from components.utils.SintelReader import Wrapper as SintelReader
+    scene = "cones"
+    im1_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "im2.png")
+    im2_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "im6.png")
+    gt_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "disp2.png")
+    occ_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "nonocc.png")
 
-    path = os.path.join(project_helpers.get_project_dir(), "datasets", "sintel", "training")
-    reader = SintelReader(rootPath=path)
-    reader.print_available_scenes()
-    reader.set_selected_scene('cave_2')
+    im1 = cv2.imread(im1_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    im2 = cv2.imread(im2_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    gt = cv2.imread(gt_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
+    occ = cv2.imread(occ_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
 
-    # left, right, disp, occ, outoff = reader.get_selected_scene_next_files()
-    match = 60
+    match = 35
     gap = -20
     egap = -1
 
     NumbaMatcherInstance = Wrapper(match, gap, egap, verbose=True)
-    NumbaMatcherInstance.set_images(left, right)
-    NumbaMatcherInstance.configure_instance()
-    NumbaMatcherInstance.set_filter(np.ones((7, 1), dtype=np.int32))
-    # NumbaMatcherInstance.configure_instance_for_optimisation()
-    # print(NumbaMatcherInstance._scanline_match_function)
+    NumbaMatcherInstance.set_images(im1, im2)
+    NumbaMatcherInstance.configure_instance(product_flag = False)
+    NumbaMatcherInstance.set_filter(np.ones((7, 3), dtype=np.float64))
 
     SimpleTimer.timeit()
     x, z = NumbaMatcherInstance.test_pipeline()
-    # x,y,z = match_images(80, -30, -2, im2, im1)
-    # x,y,z = FakeNumbaClass["match_images"] (100, -15, -5, im2, im1)
-
     SimpleTimer.timeit()
+
+    BAD1, BAD2, BAD4, BAD8, ABS_ERR, MSE, AVG, EUCLEDIAN = \
+        m.evaluate_over_all(z * 4, gt, occ, occlusions_counted_in_errors=False)
     import matplotlib.pyplot as plt
 
+    plt.figure()
     plt.imshow(z, cmap="gray")
+    plt.title("Bad4:{0}".format(BAD4))

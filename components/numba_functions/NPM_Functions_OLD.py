@@ -1,6 +1,8 @@
 import numpy as np
 from numba import njit, jit, prange
 from components.utils.SimpleTimer import SimpleTimer
+from components.numba_functions import common_functions as cf
+
 disable_debug = True
 @jit(nopython=disable_debug)
 def match_scanlines(match, gap, egap, current_index, im2_padded, im1_padded, scores, moves, filter=np.ones((3,3), dtype=np.int32)):

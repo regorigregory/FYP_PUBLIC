@@ -102,9 +102,7 @@ if __name__ == "__main__":
 ## to be continued from here!!!
     patches = [ np.ones((3,5)),
                 np.ones((7,3)),
-                np.ones((5,7)),
-                np.ones((3, 3))
-               ]
+                np.ones((5,7))               ]
 
     training_data_available = glob.glob("training*")
     ui["selected_resolution"] = "Q"
@@ -129,10 +127,11 @@ if __name__ == "__main__":
     #               naive_horizontal="naive_horizontal", naive_typo="naive_typo",
     #               naive_all="naive_all")
 
-    gamma_c_range = range(1, 4, 1)
-    gamma_s_range = range(1, 4, 1)
-    match_range = range(40, 50, 10)
+    gamma_c_range = range(5, 8, 1)
+    gamma_s_range = range(1, 2, 1)
+    match_range = range(45, 55, 10)
     alpha_range = range(0, 1,2)
+
     for pv in options.values():
         for m in match_range:
             for gamma_s in gamma_s_range:

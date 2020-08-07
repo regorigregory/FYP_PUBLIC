@@ -73,6 +73,8 @@ rob_devkit
 *.max
 
 !/benchmarking/MiddEval/MiddEval3/**/*.png
+!/benchmarking/MiddEval/MiddEval3/**/*.pfm
+
 !/**/datasets/**/*.png
 !/experiments/disparities/**/*.*
 !/tests/**/*.*

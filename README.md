@@ -40,3 +40,7 @@ Requirements are listed in the "requirements.txt" file. If run via binder, it is
 ![Raw disparity estimate](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/best_results_tabular-1.png)
 ![Raw disparity estimate](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/best_results_tabular-2.png)
 ![Raw disparity estimate](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/best_results_tabular-3.png)
+
+## References
+
+1. MacLean, W. J., Sabihuddin, S. and Islam, J. (2010) ‘Leveraging cost matrix structure for hardware implementation of stereo disparity computation using dynamic programming’, in Computer Vision and Image Understanding, pp. 1126–1138. doi: 10.1016/j.cviu.2010.03.011.

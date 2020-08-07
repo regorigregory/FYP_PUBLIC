@@ -1,7 +1,5 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC.git/master)
 #  Repo under review and construction 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC.git/master)
-
 
 Python version: 3.8.4
 

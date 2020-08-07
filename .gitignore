@@ -76,6 +76,7 @@ rob_devkit
 !/**/datasets/**/*.png
 !/experiments/disparities/**/*.*
 !/tests/**/*.*
+!/git_assets/*
 
 
 

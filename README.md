@@ -1,13 +1,14 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC.git/master)
-#  Repo under review and construction 
 
-Python version: 3.8.4
 
+#  “Stere-omics” [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC.git/master)
+#### A research project into a bioinformatics inspired stereo matching pipeline.
+
+![enter image description here](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/eval_mid_2014.png)
+
+Repository under construction...
 ## Experiment list
- The experiments are located under the "experiments/notebooks" folder. Please launch the binder link above or download the repository and run it locally.
-Requirements are listed in the "requirements.txt" file. If run via binder the limitations of that environment (2 cores + 2 GB ram).
-
- It is advised to run only the visualisation notebooks for each experiment. For those, please look for the "-VIS" suffix in the notebook's filename.
+The experiments are located under the "experiments/notebooks" folder. Please launch the main binder link above, experiment specific below or download the repository and run it locally.
+Requirements are listed in the "requirements.txt" file. If run via binder, it is advised to run only the visualisation notebooks for each experiment (the limitations of that environment: 2 cores + 2 GB ram). In that case, please look for the "-VIS" suffix in the notebook's filename.
 
 | Notebook | Matcher used | Dataset | Experiment discussion | Contents | Direct binder link |
 | ----------- | -------- |  ----------- | --- |  ---------------------------- | --- |
@@ -33,4 +34,13 @@ Requirements are listed in the "requirements.txt" file. If run via binder the li
 | ALG_006_EXP_005-Comparative_analysis-VIS.ipynb | NumbaPatchMatcherBilateral | Middlebury 2014 | Yes | Comparative interactive visual experiment analysis using plotly. | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC/master?filepath=%2Fexperiments%2Fnotebooks%2FALG_006_EXP_005-Comparative_analysis-VIS.ipynb) |
 | ALG_006_EXP_006-Bilateral_sum_truncated_2014-VIS.ipynb | NumbaPatchMatcherBilateral (with truncated cost) | Middlebury 2014 | No | Interactive visual experiment analysis using plotly. | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC/master?filepath=%2Fexperiments%2Fnotebooks%2FALG_006_EXP_006-Bilateral_sum_truncated_2014-VIS.ipynb) |
 
+## Best raw results on Middlebury 2014 training 
+(test set images are coming soon)
 
+![Raw disparity estimate](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/best_results_tabular-1.png)
+![Raw disparity estimate](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/best_results_tabular-2.png)
+![Raw disparity estimate](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/best_results_tabular-3.png)
+
+## References
+
+1. MacLean, W. J., Sabihuddin, S. and Islam, J. (2010) ‘Leveraging cost matrix structure for hardware implementation of stereo disparity computation using dynamic programming’, in Computer Vision and Image Understanding, pp. 1126–1138. doi: 10.1016/j.cviu.2010.03.011.

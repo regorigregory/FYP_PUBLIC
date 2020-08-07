@@ -21,40 +21,32 @@ def benchmark_me(img1, img2, MATCH, GAP, EGAP, kernel, ndisp, gamma_c=10, gamma_
     matcher = m(MATCH, GAP, EGAP, verbose=True)
     matcher.set_images(img1, img2)
     matcher.set_filter(kernel)
-    matcher.configure_instance(passed_dmax = ndisp, gamma_c=gamma_c, gamma_s =gamma_s, alpha=alpha)
+    matcher.configure_instance(passed_dmax = ndisp, gamma_c=gamma_c, gamma_s =gamma_s, alpha=alpha, product_flag=False)
 
     tic = time.time()
     ms, disp = matcher.test_pipeline()
     toc=time.time()
 
-    return turn_me_into_pfm(disp), toc-tic
+    return turn_me_into_pfm(disp), disp, toc-tic
 
 def turn_me_into_pfm(disp):
     # no modification is necessary?
     # offline sdk handles 0 disps, but how about online?
     # highly inconsistent.
+    disp_mod = np.where(disp==0, np.inf, disp)
+    #return disp
+    return disp_mod
 
-    return disp
+def log_results(EXP_PARAMS, disp, gt, occ, max_disp, ARE_OCCLUSIONS_ERRORS = False):
+    gt_noninf = np.where(gt==np.inf, 0, gt)
 
-def custom_benchmarking(EXP_PARAMS, disp, gt, occ, max_disp, ARE_OCCLUSIONS_ERRORS = False):
-    gt_scaled = np.where(gt==np.inf, 0, gt)
-    """dmin = gt.min()
-    dmax = gt_temp.max()
-    print("dmin: {0}, dmax: {1}".format(dmin, dmax))
-
-    scale = 1.0 / (dmax-dmin)
-    gt_scaled = scale*(gt-dmin)
-    gt_scaled = np.where(gt_scaled==np.inf, 0, gt_scaled)
-    gt_scaled  /= 1.15 + 0.1
-    print("gt_scaled_min: {0}, gt_scaled_max: {1}".format(gt_scaled.min(), gt_scaled.max()))
-    """
     EXP_PARAMS["are_occlusions_errors"] = ARE_OCCLUSIONS_ERRORS
-    occ = gt_scaled if ARE_OCCLUSIONS_ERRORS else occ
+    occ = gt_noninf if ARE_OCCLUSIONS_ERRORS else occ
 
     EXP_PARAMS["bad1"], EXP_PARAMS["bad2"], EXP_PARAMS["bad4"],\
     EXP_PARAMS["BAD8"], EXP_PARAMS["abs_error"], EXP_PARAMS["mse"],\
     EXP_PARAMS["avg"], EXP_PARAMS["eucledian"]  = \
-        me.evaluate_over_all(disp, gt_scaled, occ, occlusions_counted_in_errors=False)
+        me.evaluate_over_all(disp, gt_noninf, occ, occlusions_counted_in_errors=False)
 
 def get_preprocessing_options():
     options = dict(naive_median=naive_median, naive_vertical=naive_vertical,
@@ -135,12 +127,14 @@ if __name__ == "__main__":
     output_dir_path = os.path.join(benchmarking_root, sys.argv[4])
     kernel_width = int(sys.argv[5])
     kernel_height = int(sys.argv[6])
+
     MATCH = int(sys.argv[7])
     GAP = int(sys.argv[8])
     EGAP = int(sys.argv[9])
     part_of_test_set = True if sys.argv[10] == "True" else False
 
     preprocessing_request = False
+
     gamma_c = 0 if len(sys.argv) < 15 else int(sys.argv[14])
     gamma_s= 0 if len(sys.argv) < 16 else int(sys.argv[15])
     alpha = 0 if len(sys.argv) < 17 else int(sys.argv[16])
@@ -156,7 +150,7 @@ if __name__ == "__main__":
 
     if (img1 is None or img2 is None):
         raise Exception("The image files could not be loaded.")
-    EXPERIMENT_TITLE+="gc_{0}_gs_{1}_alph_{2}".format(gamma_c, gamma_s, alpha)
+    EXPERIMENT_TITLE+="mge_{3}_{4}_{5}_gc_{0}_gs_{1}_a_{2}".format(gamma_c, gamma_s, alpha, MATCH, GAP, EGAP)
     if (len(sys.argv) > 13):
         temp = sys.argv[13]
         if(temp in get_preprocessing_options().keys()):
@@ -197,7 +191,9 @@ if __name__ == "__main__":
     if(not os.path.isdir(output_dir_path)):
         os.makedirs(output_dir_path)
 
-    pfm_output_path = os.path.join(output_dir_path, 'disp0' + EXPERIMENT_TITLE + '.png')
+    pfm_output_path = os.path.join(output_dir_path, 'disp0' + EXPERIMENT_TITLE + '.pfm')
+    png_output_path = os.path.join(output_dir_path, 'disp0' + EXPERIMENT_TITLE + '.png')
+
     DATASET = "Middlebury_2014"
 
     EXP_PARAMS = {"experiment_id": EXPERIMENT_TITLE, "match": MATCH, "gap": GAP, "egap": EGAP,
@@ -214,7 +210,7 @@ if __name__ == "__main__":
 
     print("Benchmarking is in progress.")
 
-    result, runtime = benchmark_me(img1, img2, MATCH, GAP, EGAP, kernel, ndisp,
+    result_inf, result, runtime = benchmark_me(img1, img2, MATCH, GAP, EGAP, kernel, ndisp,
                                    gamma_c = gamma_c, gamma_s=gamma_s, alpha=alpha)
 
     EXP_PARAMS["runtime"] = runtime
@@ -224,11 +220,11 @@ if __name__ == "__main__":
     disp = result
 
     ###################################################################
-    # Saving results ##################################################
+    # Saving results *4 ###############################################
     ###################################################################
 
-    cv2.imwrite(pfm_output_path, result*4)
-
+    cv2.imwrite(png_output_path, result*4)
+    cv2.imwrite(pfm_output_path, result_inf)
     with open(output_runtime_file, "wb") as rf:
         rf.write(StrToBytes(str(runtime)))
 
@@ -246,14 +242,14 @@ if __name__ == "__main__":
         gt = u.load_pfm(gt_path)[0].astype(np.float64)
         occ = cv2.imread(occl_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
 
-        CSV_FILEPATH = os.path.join("..", "custom_log", "all_benchmarking_fix.csv")
+        CSV_FILEPATH = os.path.join("..", "custom_log", "trunc_plusblg.csv")
 
         EXP_PARAMS["preprocessing_method"] = "None"
         EXP_PARAMS["scene"] = im1_path.split("\\")[-2]
 
 
 
-        logged_path = os.path.relpath(pfm_output_path, project_helpers.get_project_dir()).replace("..\\", "").replace("../", "")
+        logged_path = os.path.relpath(png_output_path, project_helpers.get_project_dir()).replace("..\\", "").replace("../", "")
 
         EXP_PARAMS["image_filename"] = logged_path
 
@@ -266,7 +262,7 @@ if __name__ == "__main__":
         csv_logger.set_header_function(csv_logger.get_header_v3)
         csv_logger.write_csv_header()
         csv_logger.set_line_function(csv.format_stereo_matching_results_v2)
-        custom_benchmarking(EXP_PARAMS, disp*4, gt*4, occ, max_disp, ARE_OCCLUSIONS_ERRORS=False)
+        log_results(EXP_PARAMS, disp * 4, gt * 4, occ, max_disp, ARE_OCCLUSIONS_ERRORS=False)
         csv_logger.append_new_sm_results(EXP_PARAMS, selected_keys=csv.get_header_v3())
 
         print("bad4: {0}".format(EXP_PARAMS["bad4"]))

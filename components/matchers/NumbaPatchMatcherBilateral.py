@@ -5,11 +5,12 @@ from components.utils.SimpleTimer import SimpleTimer
 import numpy as np
 
 
+
 class Wrapper(Interface):
     def set_filter(self, filter):
         self._filter = filter
 
-    def configure_instance(self, passed_dmax=64, gamma_c=10, gamma_s=90, alpha=0.0, product_flag=True):
+    def configure_instance(self, passed_dmax=64, gamma_c=10, gamma_s=90, alpha=256, product_flag=True):
         super().configure_instance(
             match_images=patch_functions.match_images,
             match_scanlines=patch_functions.match_scanlines_maclean,
@@ -70,13 +71,13 @@ if __name__ == "__main__":
     gt = cv2.imread(gt_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
     occ = cv2.imread(occ_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
 
-    match = 35
-    gap = -20
+    match = 30
+    gap = -15
     egap = -1
 
     NumbaMatcherInstance = Wrapper(match, gap, egap, verbose=True)
     NumbaMatcherInstance.set_images(im1, im2)
-    NumbaMatcherInstance.configure_instance(product_flag = False)
+    NumbaMatcherInstance.configure_instance(product_flag = False, alpha = 30)
     NumbaMatcherInstance.set_filter(np.ones((7, 3), dtype=np.float64))
 
     SimpleTimer.timeit()

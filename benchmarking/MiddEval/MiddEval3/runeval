@@ -4,6 +4,7 @@
 
 # note that a threshold of 1.0 at full resolution corresponds
 # to 0.5 at half resolution and 0.25 at quarter resolution
+
 if ($#argv < 3) then
   echo ""
   echo '  runs "efficient" evaluation using GT of same size as dataset'
@@ -72,7 +73,7 @@ else
 endif
 
 if ($brief) then # print column headers only once
-  printf "dataset       algorithm      "
+  printf "dataset,       algorithm,      "
   $evalprog $thresh # print column headers
 endif
 
@@ -89,11 +90,10 @@ foreach d ($dsets)
   endif
   
   set maxdisp = `awk -F= '/ndisp/ {print $2}' $d/calib.txt`
-  echo $maxdisp
   foreach a ($algs)
     if (-e $d/disp0$a.pfm) then
-      if ($brief) printf "%-14s" $d:t   # print dataset name in first column
-      printf "%-15s" $a
+      if ($brief) printf "%-14s," $d:t   # print dataset name in first column
+      printf "%-15s," $a
       $evalprog $d/disp0$a.pfm $d/disp0GT.pfm $thresh $maxdisp $rounddisp $d/mask0nocc.png
     endif
   end
@@ -101,7 +101,7 @@ foreach d ($dsets)
     foreach f ($d/disp0*pfm)
       set a = `expr $f : '.*disp0\(.*\)\.pfm'`
       if ($a == GTy) continue    # no point in evaluating these
-      if ($brief) printf "%-14s" $d:t   # print dataset name in first column
+      if ($brief) printf ",%-14s" $d:t   # print dataset name in first column
       printf "%-15s" $a
       $evalprog $f $d/disp0GT.pfm $thresh $maxdisp $rounddisp $d/mask0nocc.png
     end

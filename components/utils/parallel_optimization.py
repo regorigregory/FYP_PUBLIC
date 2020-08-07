@@ -4,9 +4,9 @@ import numpy as np
 import time
 
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-from components.classes.SintelReader import Wrapper as SintelReader
-from components.classes.Metrix import Wrapper as Metrix
-from components.classes.NumbaSimpleMatcher import Wrapper as Matcher
+from components.utils.SintelReader import Wrapper as SintelReader
+from components.utils.Metrix import Wrapper as Metrix
+from components.matchers.NumbaSimpleMatcher import Wrapper as Matcher
 
 # Custom libraries/classes
 

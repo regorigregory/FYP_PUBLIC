@@ -1,8 +1,21 @@
 import numpy as np
-from numba import njit, jit, prange
+from numba import njit, jit, prange, vectorize, float64
 
 disable_debug = True
+@vectorize([float64(float64)])
+@jit(nopython=disable_debug)
+def phase_function(phase):
+    pie = np.pi
+    if (phase <= pie):
+        return phase
+    return 2 * pie - phase
 
+@vectorize([float64(float64, float64)])
+@jit(nopython=disable_debug)
+def safe_division(a, b):
+    if (b != 0):
+        return a / b
+    return b
 
 @jit(nopython=disable_debug)
 def get_straceback_start(currentIndex, scores_n_moves):
@@ -177,6 +190,52 @@ def calculate_gradients_de_maetzu(img_padded):
             phase[i, j] = angle_arctan
     return grads, phase
 
+
+@jit(nopython=disable_debug, parallel=True)
+def calculate_gradients_de_maetzu_rgb(img_padded):
+    grad_filter_x = np.array((1, 0, -1), dtype=np.float64) * np.ones((3, 1), dtype=np.float64)
+    grad_filter_y = np.array(((1,1,1),(0,0,0),(-1,-1,-1)), dtype=float64)
+
+    grads = np.zeros(img_padded.shape, dtype=np.float64)
+    phase = np.zeros(img_padded.shape, dtype=np.float64)
+    for i in prange(1, int(img_padded.shape[0] - 1)):
+        for j in prange(1, int(img_padded.shape[1] - 1)):
+            row_start = i - 1
+            row_end = i + 2
+            cols_start = j - 1
+            cols_end = j + 2
+            img_x_slice = img_padded[i, cols_start:cols_end] * grad_filter_x
+            img_y_slice = img_padded[row_start:row_end, j] * grad_filter_y
+
+            G_x = np.sum(img_x_slice, axis=1, dtype=np.float64)
+            G_y = np.sum(img_y_slice, axis=0, dtype=np.float64)
+
+            modulus = np.sqrt(G_x ** 2 + G_y ** 2)
+            grads[i, j] = modulus
+            angle_tan = safe_division(G_y, G_x)
+            angle_arctan = np.arctan(angle_tan)
+            phase[i, j] = angle_arctan
+    return grads, phase
+
+
+# support weight functions
+@jit(nopython=disable_debug)
+def get_color_distance_rgb(p, q):
+    # stop here
+    distance = np.sqrt(np.sum(np.square(np.subtract(p, q)), axis=2))
+    return distance
+
+@jit(nopython=disable_debug)
+def get_color_rule_component_rgb(window, gamma_c):
+    p_x = int(window.shape[0] / 2)
+    p_y = int(window.shape[1] / 2)
+    reference_pixel = window[p_y, p_x]
+    delta_c = get_color_distance_rgb(reference_pixel, window)
+    return np.exp(-(delta_c / gamma_c))
+
+
+
+
 @jit(nopython=disable_debug)
 def fill_up_first_rows_default(matrix, gap, egap):
     matrix[0, 1:] = gap * (matrix.shape[0] - 1)
@@ -279,4 +338,4 @@ def pad_image_advanced_rgb(img, filter_dims):
 
 if __name__ =="__main__":
     x = np.zeros((3,3))
-    z,y = calculate_gradients_de_maetzu(x)
+    #z,y = calculate_gradients_de_maetzu(x)

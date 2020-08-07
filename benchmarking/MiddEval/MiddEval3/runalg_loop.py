@@ -100,9 +100,10 @@ if __name__ == "__main__":
 
     ui["path_to_alg_runfile"] = os.path.join( "alg-universal", "run_v2.py")
 ## to be continued from here!!!
-    patches = [ np.ones((3,5)),
-                np.ones((7,3)),
-                np.ones((5,7))               ]
+    patches = [ #np.ones((3,5)),
+                #np.ones((7,3)),
+                np.ones((5,7))
+                ]
 
     training_data_available = glob.glob("training*")
     ui["selected_resolution"] = "Q"
@@ -127,78 +128,91 @@ if __name__ == "__main__":
     #               naive_horizontal="naive_horizontal", naive_typo="naive_typo",
     #               naive_all="naive_all")
 
-    gamma_c_range = range(5, 8, 1)
-    gamma_s_range = range(1, 2, 1)
-    match_range = range(45, 55, 10)
-    alpha_range = range(0, 1,2)
+    gamma_c_range = range(5, 8, 10)
+    gamma_s_range = range(1, 2, 10)
 
+    match_range = range(30, 40, 50)
+    alpha_range = range(30, 40, 50)
+    #gap_range  = range(-10, -30, -5)
+    #egap_range  = range(-1, -10, -2)
+    gap_range = range(-7, -14, -2)
+    egap_range = range(-1, -4, -2)
     for pv in options.values():
         for m in match_range:
-            for gamma_s in gamma_s_range:
-                for gamma_c in gamma_c_range:
-                    for alpha in alpha_range:
-                        for p in patches:
-                            ui["method_name"] = "plusblg_"+str(m)+"_"+str(p.shape[0])+"x"+str(p.shape[1])
-                            ui["kernel_height"] = p.shape[0]
-                            ui["kernel_width"] = p.shape[1]
+            for g in gap_range:
+                for eg in egap_range:
+                    for gamma_s in gamma_s_range:
+                        for gamma_c in gamma_c_range:
+                            for alpha in alpha_range:
+                                for p in patches:
+                                    ui["method_name"] = "trunc_plusblg_"+str(m)+"_"+str(p.shape[0])+"x"+str(p.shape[1])+"no_inf"
+                                    #ui["method_name"] = "trunc_plusblg"
+                                    ui["kernel_height"] = p.shape[0]
+                                    ui["kernel_width"] = p.shape[1]
 
-                            ui["match"] = str(m)
-                            ui["gap"] = str(-20)
-                            ui["egap"] = str(-1)
+                                    ui["match"] = str(m)
+                                    ui["gap"] = str(g)
+                                    ui["egap"] = str(eg)
 
-                            ui["gamma_s"] = str(gamma_s)
-                            ui["gamma_c"] = str(gamma_c)
-                            ui["alpha"] = str(alpha)
+                                    ui["gamma_s"] = str(gamma_s)
+                                    ui["gamma_c"] = str(gamma_c)
+                                    ui["alpha"] = str(alpha)
 
 
-                            for i,l in enumerate(lefties):
-                                r = righties[i]
-                                gt = gts[i]
-                                nonocc = nonoccs[i]
+                                    for i,l in enumerate(lefties):
+                                        r = righties[i]
+                                        gt = gts[i]
+                                        nonocc = nonoccs[i]
 
-                                ui["outpath"] = os.path.dirname(l)
-                                progress_bar.progress_bar(counter-1,len(lefties)*
-                                                          len(patches)*
-                                                          len(options.values())*
-                                                          len(match_range)*
-                                                          len(gamma_s_range)*
-                                                          len(gamma_c_range)*
-                                                          len(alpha_range),
-                                                          header="Generating disparities in progress.")
-                                left = l
-                                right = r
+                                        ui["outpath"] = os.path.dirname(l)
+                                        progress_bar.progress_bar(counter-1,
+                                                                  len(lefties)*
+                                                                  len(patches)*
+                                                                  len(options.values())*
+                                                                  len(match_range)*
+                                                                  len(gamma_s_range)*
+                                                                  len(gamma_c_range)*
+                                                                  len(alpha_range)*
+                                                                  len(gap_range)*
+                                                                  len(egap_range),
+                                                                  header="Generating disparities in progress.")
+                                        left = l
+                                        right = r
 
-                                tic = time.time()
-                                run_eval(ui["path_to_alg_runfile"],
-                                         ui["method_name"],
-                                         left,
-                                         right,
-                                         gt,
-                                         nonocc,
-                                         ui["outpath"],
-                                         ui["kernel_width"],
-                                         ui["kernel_height"],
-                                         ui["match"], ui["gap"],
-                                         ui["egap"],
-                                         test_set=is_test_set,
-                                         preprocessing = pv,
-                                         gamma_c = ui["gamma_c"],
-                                         gamma_s = ui["gamma_s"],
-                                         alpha = ui["alpha"]
-                                         )
+                                        tic = time.time()
+                                        run_eval(ui["path_to_alg_runfile"],
+                                                 ui["method_name"],
+                                                 left,
+                                                 right,
+                                                 gt,
+                                                 nonocc,
+                                                 ui["outpath"],
+                                                 ui["kernel_width"],
+                                                 ui["kernel_height"],
+                                                 ui["match"],
+                                                 ui["gap"],
+                                                 ui["egap"],
+                                                 test_set=is_test_set,
+                                                 preprocessing = pv,
+                                                 gamma_c = ui["gamma_c"],
+                                                 gamma_s = ui["gamma_s"],
+                                                 alpha = ui["alpha"]
+                                                 )
 
-                                toc=time.time()
-                                runtime = toc-tic
-                                print("{0}th runtime: {1}".format(counter, runtime))
-                                progress_bar.progress_bar(counter,
-                                                          len(lefties)*
-                                                          len(patches)*
-                                                          len(options.values())*
-                                                          len(match_range)*
-                                                          len(gamma_s_range)*
-                                                          len(gamma_c_range)*
-                                                          len(alpha_range),
-                                                          header="Generating disparities in progress.")
-                                counter+=1
+                                        toc=time.time()
+                                        runtime = toc-tic
+                                        print("{0}th runtime: {1}".format(counter, runtime))
+                                        progress_bar.progress_bar(counter,
+                                                                  len(lefties) *
+                                                                  len(patches) *
+                                                                  len(options.values()) *
+                                                                  len(match_range) *
+                                                                  len(gamma_s_range) *
+                                                                  len(gamma_c_range) *
+                                                                  len(alpha_range) *
+                                                                  len(gap_range) *
+                                                                  len(egap_range),
+                                                                  header="Generating disparities in progress.")
+                                        counter+=1
 
 

@@ -21,11 +21,8 @@ static const char *usage = "\n  usage: %s disp.pfm gtdisp.pfm badthresh maxdisp 
 
 int verbose = 0;
 
-void evaldisp(CFloatImage disp, CFloatImage gtdisp, CByteImage mask, float badthresh,
- int maxdisp, int rounddisp)
+void evaldisp(CFloatImage disp, CFloatImage gtdisp, CByteImage mask, float badthresh, int maxdisp, int rounddisp)
 {
-	printf("max_disp passed:%.1f \n", maxdisp);
-
     CShape sh = gtdisp.Shape();
     CShape sh2 = disp.Shape();
     CShape msh = mask.Shape();
@@ -44,7 +41,6 @@ void evaldisp(CFloatImage disp, CFloatImage gtdisp, CByteImage mask, float badth
     int usemask = (msh.width > 0 && msh.height > 0);
     if (usemask && (msh != sh))
 	throw CError("mask image must have same size as GT\n");
-	printf("scale_established:%.1f \n", scale);
 
     int n = 0;
     int bad = 0;
@@ -60,8 +56,6 @@ void evaldisp(CFloatImage disp, CFloatImage gtdisp, CByteImage mask, float badth
 	    if (valid) {
 		float maxd = scale * maxdisp; // max disp range
 		d = __max(0, __min(maxd, d)); // clip disps to max disp range
-			printf("d:%.1f, gtd:%.1f \n", d, gt);
-
 	    }
 	    if (valid && rounddisp)
 		d = round(d);
@@ -85,7 +79,7 @@ void evaldisp(CFloatImage disp, CFloatImage gtdisp, CByteImage mask, float badth
     float totalbadpercent =  100.0*(bad+invalid)/n;
     float avgErr = serr / (n - invalid); // CHANGED 10/14/2014 -- was: serr / n
     //printf("mask  bad%.1f  invalid  totbad   avgErr\n", badthresh);
-    printf("%4.1f  %6.2f  %6.2f   %6.2f  %6.2f\n",   100.0*n/(width * height), 
+    printf("%4.1f,  %6.2f,  %6.2f,   %6.2f,  %6.2f\n",   100.0*n/(width * height), 
 	   badpercent, invalidpercent, totalbadpercent, avgErr);
 }
 
@@ -121,7 +115,7 @@ int main(int argc, char *argv[])
 	} else if (argc == 2) {
 	    float badthresh = atof(argv[1]);
 	    // show what the header looks like (can grep in scripts)
-	    printf("mask  bad%.1f  invalid  totbad   avgErr\n", badthresh);
+	    printf("mask, bad%.1f,  invalid,  totbad,   avgErr\n", badthresh);
 	} else
 	    throw CError(usage, argv[0]);
     }

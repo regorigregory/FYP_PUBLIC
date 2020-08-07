@@ -1,5 +1,5 @@
 from components.interfaces.NumbaWrapper import Interface
-from components.numba_functions import NPM_TADG_Functions as patch_functions
+from components.numba_functions.dr_monroes_island import NPM_TADG_Functions as patch_functions
 from components.utils.SimpleTimer import SimpleTimer
 from components.numba_functions import common_functions as cf
 
@@ -8,7 +8,7 @@ class Wrapper(Interface):
     def set_filter(self, filter):
         self._filter = filter
 
-    def configure_instance(self, passed_dmax=64, gamma_c=10, gamma_s=90, alpha=0.9):
+    def configure_instance(self, passed_dmax=64, gamma_c=10, gamma_s=90, alpha=0.9, T_s = 255, T_c=255):
         super().configure_instance(
             match_images=patch_functions.match_images,
             match_scanlines=patch_functions.match_scanlines_maclean,
@@ -18,6 +18,8 @@ class Wrapper(Interface):
         self.gamma_c = gamma_c
         self.gamma_s = gamma_s
         self.alpha = alpha
+        self.T_c = T_c
+        self.T_s = T_s
 
     def configure_instance_for_optimisation(self):
         self.configure_instance()
@@ -48,7 +50,9 @@ class Wrapper(Interface):
                                   filter=self._filter,
                                   gamma_c=self.gamma_c,
                                   gamma_s=self.gamma_s,
-                                  alpha=self.alpha)
+                                  alpha=self.alpha,
+                                  T_s = self.T_s,
+                                  T_c = self.T_c)
         return x, z
 
 
@@ -59,7 +63,7 @@ if __name__ == "__main__":
     from components.utils.Metrix import Wrapper as m
 
     scaler = 256
-    scene = "cones"
+    scene = "teddy"
     im1_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "im2.png")
     im2_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "im6.png")
     gt_path = os.path.join("..", "..", "datasets", "middlebury", "middlebury_2003", scene, "disp2.png")
@@ -70,14 +74,18 @@ if __name__ == "__main__":
     gt = cv2.imread(gt_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
     occ = cv2.imread(occ_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
 
-    match = 35/scaler
+    match = 80/scaler
     gap = -20/scaler
-    egap = -1/scaler
+    egap = -15/scaler
 
     NumbaMatcherInstance = Wrapper(match, gap, egap, verbose=True)
     NumbaMatcherInstance.set_images(im1, im2)
-    NumbaMatcherInstance.configure_instance(gamma_c=1.2, gamma_s=20, alpha=0.75)
-    NumbaMatcherInstance.set_filter(np.ones((3, 3), dtype=np.float64))
+    NumbaMatcherInstance.configure_instance(gamma_c=1.6e+00,
+                             gamma_s=2.6e+00,
+                             alpha=0.60,
+                             T_c=0.6e-01,
+                             T_s=3.5e-03)
+    NumbaMatcherInstance.set_filter(np.ones((5, 7), dtype=np.float64))
 
     SimpleTimer.timeit()
     x, z = NumbaMatcherInstance.test_pipeline()

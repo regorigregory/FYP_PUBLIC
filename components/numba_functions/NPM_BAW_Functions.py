@@ -15,7 +15,7 @@ def get_patch_absolute_difference(currentIndex,
                                   cache_left=(), cache_right=(),
                                   gcl=(),
                                   gcr=(),
-                                  alpha=0.0,
+                                  alpha=256.0,
                                   product_flag=True):
     # here, you have to calculate the patches indices without the default value
     filter_y = filter.shape[0]
@@ -54,8 +54,8 @@ def get_patch_absolute_difference(currentIndex,
 
     sum_of_absolute_difference = np.sum(absolute_difference)  # * (1-alpha)
     sum_of_absolute_grad_difference = 0
-
-    return (sum_of_absolute_difference + sum_of_absolute_grad_difference) / np.sum(filter)
+    term_to_be_truncated = (sum_of_absolute_difference + sum_of_absolute_grad_difference) / np.sum(filter)
+    return min(term_to_be_truncated, alpha)
 
 
 @jit(nopython=disable_debug)
@@ -73,7 +73,7 @@ def match_scanlines_maclean(match,
                             gamma_s=10,
                             gcl=(),
                             gcr=(),
-                            alpha=0.0,
+                            alpha=256.0,
                             product_flag =True):
 
     start_x = int((filter.shape[1] - 1) / 2)
@@ -142,10 +142,9 @@ def match_images(match,
                  filter=np.ones((5, 5), dtype=np.float64),
                  gamma_c=10,
                  gamma_s=10,
-                 alpha=0.0,
+                 alpha=256.0,
                  product_flag = True):
-    if (alpha != 0.0):
-        print("The parameter alpha will be ignored for this pipeline.")
+
     im1_padded = cf.pad_image_advanced(im1, filter.shape)
     im2_padded = cf.pad_image_advanced(im2, filter.shape)
     # gcl = calculate_gradients(im1_padded)
@@ -182,7 +181,7 @@ def test_pipeline(match, gap, egap, im1, im2,
                                  dtype=np.float64),
                   gamma_c=10,
                   gamma_s=10,
-                  alpha=0.0,
+                  alpha=256,
                   product_flag = True):
     scores_raw, moves_raw = cf.initialize_matrix_template_maclean(gap, egap, im1)
     scores_n_moves = np.zeros((2, im1.shape[0], im1.shape[1] + 1, im1.shape[1] + 1), dtype=np.float64)
@@ -225,8 +224,8 @@ if __name__ == "__main__":
     occ = cv2.imread(occ_path, cv2.IMREAD_GRAYSCALE).astype(np.float64)
     # im1 = np.random.randint(0, 255, [2,4])
     # im2 = np.random.randint(0, 255, [2, 4])
-    match = 35
-    gap = -22
+    match = 30
+    gap = -13
     egap = -3
     scores_raw, moves_raw = cf.initialize_matrix_template(gap, egap, im1)
     scores_n_moves = np.zeros((2, im1.shape[0], im1.shape[1] + 1, im1.shape[1] + 1), dtype=np.float64)
@@ -234,8 +233,16 @@ if __name__ == "__main__":
     # test_1, test_2 = match_scanlines(match, gap, egap, 0, im2, im1, scores_raw, moves_raw)
 
     SimpleTimer.timeit()
-    x, z = test_pipeline(match, gap, egap, im1, im2, filter=np.ones((7, 3), dtype=np.float64), gamma_c=9.5, gamma_s=120,
-                         alpha=0.0, product_flag=True)
+    x, z = test_pipeline(match,
+                         gap,
+                         egap,
+                         im1,
+                         im2,
+                         filter=np.ones((5, 7), dtype=np.float64),
+                         gamma_c=5,
+                         gamma_s=1,
+                         alpha=30,
+                         product_flag=False)
     # x,y,z = match_images(80, -30, -2, im2, im1)
     # x,y,z = FakeNumbaClass["match_images"] (100, -15, -5, im2, im1)
     # Wrapper.match_images( im2, im1)

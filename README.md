@@ -3,8 +3,6 @@
 #  “Stere-omics” [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC.git/master)
 #### A research project into a bioinformatics inspired stereo matching pipeline.
 
-![enter image description here](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/eval_mid_2014.png)
-
 Repository under construction...
 ## Experiment list
 The experiments are located under the "experiments/notebooks" folder. Please launch the main binder link above, experiment specific below or download the repository and run it locally.

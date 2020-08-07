@@ -5,8 +5,7 @@
 
 ![enter image description here](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/eval_mid_2014.png)
 
-Python version: 3.8.4
-
+Repository under construction...
 ## Experiment list
 The experiments are located under the "experiments/notebooks" folder. Please launch the main binder link above, experiment specific below or download the repository and run it locally.
 Requirements are listed in the "requirements.txt" file. If run via binder, it is advised to run only the visualisation notebooks for each experiment (the limitations of that environment: 2 cores + 2 GB ram). In that case, please look for the "-VIS" suffix in the notebook's filename.

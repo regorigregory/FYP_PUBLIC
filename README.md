@@ -8,10 +8,8 @@
 Python version: 3.8.4
 
 ## Experiment list
- The experiments are located under the "experiments/notebooks" folder. Please launch the binder link above or download the repository and run it locally.
-Requirements are listed in the "requirements.txt" file. If run via binder the limitations of that environment (2 cores + 2 GB ram).
-
- It is advised to run only the visualisation notebooks for each experiment. For those, please look for the "-VIS" suffix in the notebook's filename.
+The experiments are located under the "experiments/notebooks" folder. Please launch the main binder link above, experiment specific below or download the repository and run it locally.
+Requirements are listed in the "requirements.txt" file. If run via binder, it is advised to run only the visualisation notebooks for each experiment (the limitations of that environment: 2 cores + 2 GB ram). In that case, please look for the "-VIS" suffix in the notebook's filename.
 
 | Notebook | Matcher used | Dataset | Experiment discussion | Contents | Direct binder link |
 | ----------- | -------- |  ----------- | --- |  ---------------------------- | --- |

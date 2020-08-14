@@ -1,5 +1,6 @@
 import glob
 import subprocess
+#Code was built based on: https://github.com/ozendelait/rvc_devkit/tree/release
 
 import sys
 sys.path.append("../../")

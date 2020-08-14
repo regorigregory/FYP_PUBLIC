@@ -4,6 +4,10 @@ import sys
 from  components.utils.SimpleProgressBar import SimpleProgressBar
 import numpy as np
 
+#Code was built based on: https://github.com/ozendelait/rvc_devkit/tree/release
+
+
+
 def print_options(opts):
     for i, opt in enumerate(opts):
         print("[{0}] {1}".format(i+1, opt))

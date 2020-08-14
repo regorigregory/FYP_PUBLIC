@@ -7,7 +7,7 @@ from skimage.filters import median
 from skimage.morphology import disk
 from components.matchers.NumbaPatchMatcher import Wrapper as m
 
-
+#Code was built based on: https://github.com/ozendelait/rvc_devkit/tree/release
 def StrToBytes(text):
     if sys.version_info[0] == 2:
         return text

@@ -1,3 +1,4 @@
+# inspiration was drawn from the comments at https://stackoverflow.com/questions/3451111/unzipping-files-in-python.
 import zipfile
 import glob
 import os

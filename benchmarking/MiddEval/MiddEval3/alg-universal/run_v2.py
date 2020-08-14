@@ -9,7 +9,7 @@ from components.matchers.NumbaPatchMatcherBilateral import Wrapper as m
 from components.utils import SimpleConvolution as SC
 from components.utils import utils as u
 
-
+#Code was built based on: https://github.com/ozendelait/rvc_devkit/tree/release
 def StrToBytes(text):
     if sys.version_info[0] == 2:
         return text

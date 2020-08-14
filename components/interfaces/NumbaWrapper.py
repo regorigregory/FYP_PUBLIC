@@ -41,8 +41,8 @@ class Interface(abc.ABC):
 
     def configure_instance(self,
                            match_images = default_functions.match_images,
-                           match_scanlines = default_functions.match_scanlines,
-                           initialize_matrix_template=cf.initialize_matrix_template,
+                           match_scanlines = default_functions.match_scanlines_maclean,
+                           initialize_matrix_template=cf.initialize_matrix_template_maclean,
                            fill_up_first_rows_func = cf.fill_up_first_rows_default,
                            dmax=256):
 

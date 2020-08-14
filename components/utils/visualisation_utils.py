@@ -22,7 +22,9 @@ def compare_histograms(img, gt, titles=["disparity", "groundtruth"]):
 def show_hit_and_miss(disp,gt, titles=["hit", "miss"], threshold=1):
     c = _get_correct_pixels(gt, disp, threshold=threshold)
     ic = _get_incorrect_pixels(gt, disp, threshold=threshold)
-    plt.subplots(1,2)
+    fig, axes = plt.subplots(1,2)
+    fig.figsize = [12.8, 8.6]
+    plt.subplots_adjust(wspace=0.6)
     ax = plt.subplot(121)
     ax.set_title(titles[0])
     plt.imshow(c, cmap="gray")
@@ -62,7 +64,7 @@ def get_discrepancies(gt, disp, img=None, correct_ones=False):
 def plod3d_with_img_surface(disp, finess=5, surface=None, rotation=False, surface_color_converter = cv2.COLOR_BGR2RGB):
     x = np.arange(0, disp.shape[0])[:, np.newaxis]
     y = np.arange(0, disp.shape[1])[:, np.newaxis]
-    fig = plt.figure()
+    fig = plt.figure(figsize=[12.8, 8.6])
     if (surface is not None):
         facecolors_param = cv2.cvtColor(surface, surface_color_converter) / 255
     else:

@@ -232,17 +232,17 @@ def plot_disparity_3d(disparity, cmm = cm.viridis):
     ax = fig.gca(projection="3d")
     ax.plot_surface(x,y.T, disparity, cmap = cmm)
 
-def plot_images(imgs, titles, cmode = "gray", ncols= 4):
+def plot_images(imgs, titles, cmode = "gray", ncols= 4, hspace=0.5, wspace=0.5):
     assert len(imgs) == len(titles)
     n = len(imgs)
     row_number = math.ceil(n / ncols)
-    plt.subplots(figsize=[20, int(4*row_number)])
-    plt.subplots_adjust(hspace=0.5, wspace=0.5)
+    fig = plt.subplots(figsize=[20, int(4*row_number)])
+    plt.subplots_adjust(hspace=hspace, wspace=wspace)
     for i, img in enumerate(imgs):
         ax = plt.subplot(row_number, ncols, i + 1)
         ax.set_title("%s\n (%dx%d)" % (titles[i], img.shape[1], img.shape[0]))
         plt.imshow(img, cmode)
-
+    return fig
 if __name__ == "__main__":
     import sys
     import os

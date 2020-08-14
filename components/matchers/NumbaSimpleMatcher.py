@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     #NumbaMatcherInstance.set_images(loaded_imgs[1], loaded_imgs[0])
     NumbaMatcherInstance\
-        .configure_instance(initialize_matrix_template= NumbaMatcherInstance.matrix_template_intit[1], match_scanlines = NumbaMatcherInstance.match_functions[1], dmax=128)
+        .configure_instance(dmax=64)
     #NumbaMatcherInstance.configure_instance()
 
     SimpleTimer.timeit()

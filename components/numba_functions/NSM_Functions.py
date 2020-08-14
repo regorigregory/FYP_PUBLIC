@@ -24,7 +24,7 @@ def match_scanlines(match, gap, egap, current_index, im2, im1, scores, moves, dm
         for j in range(1, im1_scanline.shape[0] + 1):
             im1_index, im2_index = j - 1, i - 1
             match_raw = match - abs(im1_scanline[im1_index] - im2_scanline[im2_index])
-            print(match_raw)
+            #(match_raw)
             east, north, ne = (i, j - 1), (i - 1, j), (i - 1, j - 1)
             east_raw, north_raw, ne_raw = scores[east], scores[north], scores[ne]
             east_dir, north_dir, ne_dir = moves[east], moves[north], moves[ne]
@@ -52,7 +52,6 @@ def match_scanlines_maclean(match, gap, egap, current_index, im2, im1, scores, m
         for j in range(starting_index, i + 1):
             im1_index, im2_index = j - 1, i - 1
             match_raw = match - abs(im1_scanline[im1_index] - im2_scanline[im2_index])
-            print(match_raw)
             east, north, ne = (i, j - 1), (i - 1, j), (i - 1, j - 1)
             east_raw, north_raw, ne_raw = scores[east], scores[north], scores[ne]
             east_dir, north_dir, ne_dir = moves[east], moves[north], moves[ne]

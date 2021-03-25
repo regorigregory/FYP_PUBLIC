@@ -1,10 +1,18 @@
 
 
 
+
 #  “Stere-omics” [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC.git/master)
 #### A research project into a bioinformatics inspired stereo matching pipeline.
-
+## What is this?
+This my dissertation project's public code repository. The main goal of was to improve on a novel bio-informatics based stereo matching pipeline.
+### What is stereo matching?
+Stereo matching is a subset within the field of computer vision concerned with finding corresponding pixels between the views of two stereo images. The output of such algorithm is a so-called "disparity map". Within such image, each pixel's color intensity represents the horizontal movement of a pixel with regards to its corresponding pair in the other view. This, knowing the geometry of the stereo-setup can be used to reconstruct depth.
+### What does it have to do with bio-informatics?
+DNA sequence alignment is the process of attempting to find two or more DNA sequences common elements by insertion or deletion of characters in either sequence. One of them, namely, the Niedelman and Wunch algorithm takes advantage on dynamic programming to find the best overlap between two sequences.
+As it turns out, an adapted form of this algorithm can be used on image scan-lines as well.
 ## Experiment list
+#### Please scroll the table to the right for separate binder links.
 The experiments are located under the "experiments/notebooks" folder. Please launch the main binder link above, experiment specific below or download the repository and run it locally.
 Requirements are listed in the "requirements.txt" file. If run via binder, it is advised to run only the visualisation notebooks for each experiment (the limitations of that environment: 2 cores + 2 GB ram). In that case, please look for the "-VIS" suffix in the notebook's filename.
 

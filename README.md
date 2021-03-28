@@ -1,7 +1,3 @@
-
-
-
-
 #  “Stere-omics” [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/regorigregory/FYP_PUBLIC.git/master)
 #### A research project into a bioinformatics inspired stereo matching pipeline.
 ## What is this?
@@ -11,6 +7,9 @@ Stereo matching is a subset within the field of computer vision concerned with f
 ### What does it have to do with bio-informatics?
 DNA sequence alignment is the process of attempting to find two or more DNA sequences common elements by insertion or deletion of characters in either sequence. One of them, namely, the Niedelman and Wunch algorithm takes advantage on dynamic programming to find the best overlap between two sequences.
 As it turns out, an adapted form of this algorithm can be used on image scan-lines as well.
+## Results
+The graphs below shows the performance improvements achieved by introducing different cost-aggregation methods. The tests were run at quater resolution against the metric called "bad1".
+![Improvements against the baseline](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/eval_mid_2014.png?raw=true)
 ## Experiment list
 #### Please scroll the table to the right for separate binder links.
 The experiments are located under the "experiments/notebooks" folder. Please launch the main binder link above, experiment specific below or download the repository and run it locally.

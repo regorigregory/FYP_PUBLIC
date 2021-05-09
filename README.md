@@ -3,10 +3,13 @@
 ## What is this?
 This my dissertation project's public code repository. The main goal of was to improve on a novel bio-informatics based stereo matching pipeline.
 ### What is stereo matching?
+![What is stereo matching?](https://github.com/regorigregory/FYP_PUBLIC/raw/master/git_assets/FYP_what_is_stereo_correspondence.png)
 Stereo matching is a subset within the field of computer vision concerned with finding corresponding pixels between the views of two stereo images. The output of such algorithm is a so-called "disparity map". Within such image, each pixel's color intensity represents the horizontal movement of a pixel with regards to its corresponding pair in the other view. This, knowing the geometry of the stereo-setup can be used to reconstruct depth.
 ### What does it have to do with bio-informatics?
 DNA sequence alignment is the process of attempting to find two or more DNA sequences common elements by insertion or deletion of characters in either sequence. One of them, namely, the Niedelman and Wunch algorithm takes advantage on dynamic programming to find the best overlap between two sequences.
 As it turns out, an adapted form of this algorithm can be used on image scan-lines as well.
+![The main idea behind "Stere-omics"](https://github.com/regorigregory/FYP_PUBLIC/raw/master/git_assets/FYP_what_is_stereomics.png)
+
 ## Results
 The graphs below shows the performance improvements achieved by introducing different cost-aggregation methods. The tests were run at quater resolution against the metric called "bad1".
 ![Improvements against the baseline](https://github.com/regorigregory/FYP_PUBLIC/blob/master/git_assets/eval_mid_2014.png?raw=true)
